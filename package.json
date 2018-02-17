@@ -1,0 +1,45 @@
+{
+  "name": "blog1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "bootstrap": "^3.3.7",
+    "connect-history-api-fallback": "^1.3.0",
+    "connect-mongo": "^1.3.2",
+    "ejs": "^2.5.5",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "html-webpack-plugin": "^2.26.0",
+    "mongoose": "^4.7.5",
+    "multer": "^1.2.1",
+    "path": "^0.12.7",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "css-loader": "^0.26.1",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.26.0",
+    "open-browser-webpack-plugin": "0.0.3",
+    "react-router": "^3.0.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.3.0"
+  },
+  "scripts": {
+    "start": "node app",
+    "build": "webpack",
+    "dev": "webpack-dev-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
