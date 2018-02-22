@@ -8,12 +8,14 @@ var auth=require('./auth')
 var multer=require('multer')
 //指定上传文件的存放目录
 var upload=multer({dest:'./public'})
+var path=require('path')
 //注册
 //路径以/开头，模板不能有/
-router.get('/signup',auth.checkNoLogin,function (req,res) {
+router.get('/signup',function (req,res) {
     //res.render('user/signup',{title:'注册'})//注意，此路径是相对于views的子路径。是app.js里的‘app.set('views',path.resolve('views'))’这个路径
-
-    res.send()
+    //res.redirect('/')//刷新后，想重定向到当前页面····································
+    res.sendFile(path.resolve('build/index.html'))
+    console.log('zhuce')
 })
 //当表单只有一个文件域的时候，可以用upload.single
 //router.post('/singup',auth.checkNotLogin,upload.single('avatar'))
@@ -49,10 +51,11 @@ router.post('/signup',auth.checkNoLogin,upload.single('avatar'),function (req,re
     })
 
 //登录
-/*router.get('/signin',auth.checkNoLogin,function (req,res) {
+router.get('/signin',auth.checkNoLogin,function (req,res) {
     //res.render('user/signin',{title:'登录'})
-    res.send()
-})*/
+    res.sendFile(path.resolve('build/index.html'))
+
+})
 router.post('/signin',auth.checkNoLogin,function (req,res) {
     var body=req.body
     User.findOne(body,function (e,doc) {
@@ -67,7 +70,7 @@ router.post('/signin',auth.checkNoLogin,function (req,res) {
     })
 })
 router.get('/signout',auth.checkLogin,function (req,res) {
-    req.session.user=null
+    req.session.user=''
     console.log(1123)
     res.send({err:0})
 })

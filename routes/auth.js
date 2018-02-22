@@ -5,14 +5,15 @@ function checkLogin(req,res,next) {
         next()
     }
     else{
-        res.redirect('/user/signin')
+        res.redirect(path.resolve('./index.html'))
+
     }
 }
 function checkNoLogin(req,res,next) {
     console.log(req.session.user,123)
     if(req.session.user){
-        req.session.err='未登录才能范文'
-        res.redirect('/')
+        res.redirect(path.resolve('./index.html'))
+
     }
     else{
         next()

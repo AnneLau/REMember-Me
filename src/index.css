@@ -1,0 +1,40 @@
+.navbar-right img{
+    width:50px;
+    height:50px;
+}
+.media-left img{
+    width:60px;
+    height:60px;
+}
+.dropdown-toggle img{
+    width: 40px;
+    height: 40px;
+
+}
+.dropdown-toggle{
+    padding:5px!important;
+}
+
+.commentItem{
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px dotted silver;
+}
+.commentItem:after{
+    content: '';
+    display:block;
+    clear: both;
+}
+.commentItem>div{
+    margin-bottom: 10px;
+}
+.commentContent{
+    padding-left:.5em;
+    text-indent: 1em;
+}
+li {
+    list-style:none;
+}
+nav a.active{
+    background:#e7e7e7 ;
+}

@@ -10,7 +10,8 @@ var getName=function (_id,cb) {
     })
 }
 //增加留言
-router.post('/',function(req,res){
+router.post('/',auth.checkLogin,function(req,res){
+    console.log('add')
     var comment=req.body
     comment.user=req.session.user._id
     //comment.article=id
@@ -27,7 +28,6 @@ router.post('/',function(req,res){
                     })
                 })
             }*/
-            console.log(docs)
             res.send(docs)
         })
     })

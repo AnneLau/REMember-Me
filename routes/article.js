@@ -1,16 +1,17 @@
 var express=require('express')
 var router=express.Router()
 var Article=require('../db').Article
-
+var path=require('path')
 router.get('/all',function (req,res) {
     Article.find({}).populate('user').exec(function (err,articles) {
         res.send(articles)
     })
 })
 //增加
-router.get('/add/:id',function (req,res) {
+router.get('/add',function (req,res) {
     //res.render('article/add',{title:'增加',article:{}})
-    res.send()
+    console.log('aaaddd')
+    res.sendFile(path.resolve('build/index.html'))
 })
 router.post('/add',function (req,res) {
     var body=req.body
@@ -31,7 +32,7 @@ router.post('/add',function (req,res) {
     })
     res.end()*/
 })
-router.get('/detail/:_id',function (req,res) {
+router.get('/detail/get/:_id',function (req,res) {
     var _id=req.params._id
     console.log(_id)
     Article.findById(_id,function(err,article){
@@ -39,23 +40,34 @@ router.get('/detail/:_id',function (req,res) {
         res.send(article)
     })
 })
-router.get('/update/:_id',function (req,res) {
+//访问article/detail/get58a4558d4791fb19c80ea451,重定向
+router.get('/detail/:id',function (req,res) {
+    console.log(req.originalUrl)
+    //res.redirect('./'+req.params.id)
+    res.sendFile(path.resolve('build/index.html'))
+
+})
+router.get('/update/get/:_id',function (req,res) {
     var _id=req.params._id
+    console.log('gaiyige')
     Article.findById(_id,function (err,article) {
         res.send(article)
     })
+})
+router.get('/update/:id',function (req,res) {
+    res.sendFile(path.resolve('build/index.html'))
+
 })
 router.post('/update/:_id',function (req,res) {
     var _id=req.params._id
     Article.update({_id},req.body,function (err,article) {
         if(err){
-            console.log(2)
             req.session.err=err
+            //可能会出问题。。。。。。。。。。。。。。。。。
             res.redirect('back')
         }
         if(article){
             req.session.success='文章修改成功'
-            console.log(1)
             //res.redirect('/article/detail/'+req.params._id);
             res.redirect('/')
         }
@@ -63,7 +75,6 @@ router.post('/update/:_id',function (req,res) {
 })
 router.get('/delete/:_id',function (req,res,next) {
     var _id=req.params._id
-    console.log(req.headers.host)
     Article.remove({_id},function (err,result) {
         if(err){
             req.session.err=err
@@ -74,5 +85,9 @@ router.get('/delete/:_id',function (req,res,next) {
             res.send({err:0})
         }
     })
+})
+router.use(function (req,res) {
+    res.sendFile(path.resolve('build/index.html'))
+
 })
 module.exports = router;
