@@ -17,7 +17,7 @@ export default class CommentList extends Component{
                         return(<li className="commentItem" key={index}>
                            <div >
                                <a className="text-p" href="###">{item.user}</a>说道:
-                               { this.props.superAdmin?<button  className="btn btn-danger btn-xs pull-right" onClick={()=>this.props.deleteComment(item._id)}>删除</button>:null}
+                               { this.props.isSuper?<button  className="btn btn-danger btn-xs pull-right" onClick={()=>this.props.deleteComment(item._id)}>删除</button>:null}
                            </div>
                            <div className="commentContent">
                                {item.content}

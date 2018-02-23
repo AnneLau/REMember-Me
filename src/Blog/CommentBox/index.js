@@ -8,8 +8,9 @@ export default class CommentBox extends Component{
     //props 代表当前组件的属性对象
     constructor(props){
         super(props);
-        this.state={comments:[],superAdmin:null}
+        this.state={comments:[]}
         // 在es6中使用此方法初始化一个状态对象
+        console.log(this.props.isSuper,'super')
 
     }
     //向状态 comments里增加一个新的对象
@@ -36,13 +37,7 @@ export default class CommentBox extends Component{
             this.setState({comments})
         })
 
-        var user=localUser.query()
-        if(user){
-            this.setState({superAdmin:user.username=='simba'})
-        }
-        else{
-            this.setState({superAdmin:false})
-        }
+
     }
     //在es6中，render里的this指向的是当前组件的实例
     render(){
@@ -52,7 +47,7 @@ export default class CommentBox extends Component{
                     <h3 className="text-center">说点啥</h3>
                 </div>
                 <div className="panel-body">
-                    <CommentList deleteComment={this.deleteComment.bind(this)} comments={this.state.comments} localUser={localUser} superAdmin={this.state.superAdmin}></CommentList>
+                    <CommentList deleteComment={this.deleteComment.bind(this)} comments={this.state.comments} localUser={localUser} isSuper={this.props.isSuper}></CommentList>
                 </div>
                 <div className="panel-footer">
                     <CommentForm addComment={this.addComment.bind(this)}></CommentForm>

@@ -13,21 +13,12 @@ export default class  extends React.Component{
         super(props)
         this.state={localUser:null,articles:[],err:null,success:null,superAdmin:null};
     }
-    changeAdmin(superAdmin){
-        console.log(this,'ex222222222222')
-        this.setStae({superAdmin:'superAdmin111111'})
-        console.log(superAdmin,'admin')
-    }
-    ComponentDidUpdate(){
-        console.log(this,'ex11111111111')
-        this.setState({superAdmin:'aaaa'})
-    }
     render(){
 
         return(
             <Router history={browserHistory} >
-                <Route path='/' component={Navs} changeAdmin={this.changeAdmin.bind(this)} >
-                    <IndexRoute component={IndexContainer} ></IndexRoute>
+                <Route path='/' component={Navs}  >
+                    <IndexRoute  component={IndexContainer} ></IndexRoute>
                     <Route path='user/signup' component={UserSignup}></Route>
                     <Route path='user/signin' component={UserSignin}></Route>
                     <Route path='article/add' component={ArticleAdd}></Route>

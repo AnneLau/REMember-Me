@@ -25,7 +25,7 @@ export default class ArticleAdd extends React.Component{
                 </div>
                 <div className="form-group">
                     <label htmlFor="contain" className="col-md-2">正文</label>
-                    <textarea cols="30" rows="10" className="col-md-10" name="content" id="contain" value={this.state.valueContent} onChange={this.handleChangeC.bind(this)}></textarea>
+                    <textarea cols="30" rows="10" className="col-md-10" name="content" id="contain" value={this.state.valueContent} onChange={this.handleChangeT.bind(this)}></textarea>
                 </div>
 
                 <button type="submit" className="btn btn-default block"  >提交</button>

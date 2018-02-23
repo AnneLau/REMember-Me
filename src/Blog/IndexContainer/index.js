@@ -31,7 +31,6 @@ export default class IndexContainer extends React.Component{
                     ))}
                 </div>
                 <Whether/>
-                <div>{this.props.children}</div>
             </div>
         )
     }

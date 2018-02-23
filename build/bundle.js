@@ -37213,19 +37213,6 @@ var _class = function (_React$Component) {
     }
 
     _createClass(_class, [{
-        key: 'changeAdmin',
-        value: function changeAdmin(superAdmin) {
-            console.log(this, 'ex222222222222');
-            this.setStae({ superAdmin: 'superAdmin111111' });
-            console.log(superAdmin, 'admin');
-        }
-    }, {
-        key: 'ComponentDidUpdate',
-        value: function ComponentDidUpdate() {
-            console.log(this, 'ex11111111111');
-            this.setState({ superAdmin: 'aaaa' });
-        }
-    }, {
         key: 'render',
         value: function render() {
 
@@ -37234,8 +37221,8 @@ var _class = function (_React$Component) {
                 { history: _reactRouter.browserHistory },
                 _react2.default.createElement(
                     _reactRouter.Route,
-                    { component: _index2.default, changeAdmin: this.changeAdmin.bind(this) },
-                    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _index4.default }),
+                    { path: '/', component: _index2.default },
+                    _react2.default.createElement(_reactRouter.IndexRoute, { component: _index4.default }),
                     _react2.default.createElement(_reactRouter.Route, { path: 'user/signup', component: _signup2.default }),
                     _react2.default.createElement(_reactRouter.Route, { path: 'user/signin', component: _signin2.default }),
                     _react2.default.createElement(_reactRouter.Route, { path: 'article/add', component: _add2.default }),
@@ -37453,7 +37440,7 @@ var CommentList = function (_Component) {
                                 item.user
                             ),
                             '\u8BF4\u9053:',
-                            _this2.props.superAdmin ? _react2.default.createElement(
+                            _this2.props.isSuper ? _react2.default.createElement(
                                 'button',
                                 { className: 'btn btn-danger btn-xs pull-right', onClick: function onClick() {
                                         return _this2.props.deleteComment(item._id);
@@ -37531,8 +37518,9 @@ var CommentBox = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (CommentBox.__proto__ || Object.getPrototypeOf(CommentBox)).call(this, props));
 
-        _this.state = { comments: [], superAdmin: null };
+        _this.state = { comments: [] };
         // 在es6中使用此方法初始化一个状态对象
+        console.log(_this.props.isSuper, 'super');
 
         return _this;
     }
@@ -37574,13 +37562,6 @@ var CommentBox = function (_Component) {
             this.props.store.query(function (comments) {
                 _this4.setState({ comments: comments });
             });
-
-            var user = _localUser2.default.query();
-            if (user) {
-                this.setState({ superAdmin: user.username == 'simba' });
-            } else {
-                this.setState({ superAdmin: false });
-            }
         }
         //在es6中，render里的this指向的是当前组件的实例
 
@@ -37602,7 +37583,7 @@ var CommentBox = function (_Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'panel-body' },
-                    _react2.default.createElement(_CommentList2.default, { deleteComment: this.deleteComment.bind(this), comments: this.state.comments, localUser: _localUser2.default, superAdmin: this.state.superAdmin })
+                    _react2.default.createElement(_CommentList2.default, { deleteComment: this.deleteComment.bind(this), comments: this.state.comments, localUser: _localUser2.default, isSuper: this.props.isSuper })
                 ),
                 _react2.default.createElement(
                     'div',
@@ -37717,12 +37698,7 @@ var IndexContainer = function (_React$Component) {
                         );
                     })
                 ),
-                _react2.default.createElement(_Whether2.default, null),
-                _react2.default.createElement(
-                    'div',
-                    null,
-                    this.props.children
-                )
+                _react2.default.createElement(_Whether2.default, null)
             );
         }
     }]);
@@ -37767,13 +37743,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-/*class NavsChild extends React.Component{
-
-    render(){
-        console.log(this.props)
-        return React.cloneElement(this.props.children)
-    }
-}*/
 var Navs = function (_React$Component) {
     _inherits(Navs, _React$Component);
 
@@ -37782,8 +37751,7 @@ var Navs = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Navs.__proto__ || Object.getPrototypeOf(Navs)).call(this, props));
 
-        _this.state = { localUser: null, err: null, success: null };
-        console.log(_this.props, '222222');
+        _this.state = { localUser: null, err: null, success: null, isSuper: false };
         return _this;
     }
 
@@ -37795,6 +37763,13 @@ var Navs = function (_React$Component) {
             _jquery2.default.get('/localUser').then(function (data) {
                 _this2.setState({ localUser: data.localUser, err: data.err, success: data.success });
                 _index2.default.set(data.localUser);
+                //判断超级是否是超级用户
+                var user = _index2.default.query();
+                if (user) {
+                    _this2.setState({ isSuper: user.username == 'simba' });
+                } else {
+                    _this2.setState({ isSuper: false });
+                }
             });
         }
     }, {
@@ -37805,7 +37780,7 @@ var Navs = function (_React$Component) {
             _jquery2.default.get('/user/signout').then(function (data) {
                 if (data.err == 0) {
                     _index2.default.del();
-                    _this3.setState({ localUser: null });
+                    _this3.setState({ localUser: null, isSuper: false });
                 }
             });
         }
@@ -37841,7 +37816,7 @@ var Navs = function (_React$Component) {
                                     null,
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { activeClassName: 'active', to: '/' },
+                                        { activeStyle: { background: "#e7e7e7" }, to: '/' },
                                         '\u9996\u9875'
                                     )
                                 ),
@@ -37850,7 +37825,7 @@ var Navs = function (_React$Component) {
                                     null,
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { activeClassName: 'active', to: '/article/add' },
+                                        { activeStyle: { background: "#e7e7e7" }, to: '/article/add' },
                                         '\u53D1\u8868\u6587\u7AE0'
                                     )
                                 ),
@@ -37859,7 +37834,7 @@ var Navs = function (_React$Component) {
                                     { className: 'navbar-right btn-group' },
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { activeClassName: 'active', className: 'dropdown-toggle col-md-12', 'data-toggle': 'dropdown' },
+                                        { activeStyle: { background: "#e7e7e7" }, className: 'dropdown-toggle col-md-12', 'data-toggle': 'dropdown' },
                                         _react2.default.createElement('img', { src: _this4.state.localUser.avatar }),
                                         _react2.default.createElement('span', { className: 'caret' })
                                     ),
@@ -37871,7 +37846,7 @@ var Navs = function (_React$Component) {
                                             null,
                                             _react2.default.createElement(
                                                 _reactRouter.Link,
-                                                { activeClassName: 'active', to: '###' },
+                                                { activeStyle: { background: "#e7e7e7" }, to: '###' },
                                                 '\u4E2A\u4EBA\u4E3B\u9875'
                                             )
                                         ),
@@ -37891,7 +37866,7 @@ var Navs = function (_React$Component) {
                                     { className: 'navbar-right' },
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { activeClassName: 'active', to: '/user/signup' },
+                                        { activeStyle: { background: "#e7e7e7" }, to: '/user/signup' },
                                         '\u6CE8\u518C'
                                     )
                                 )
@@ -37927,7 +37902,7 @@ var Navs = function (_React$Component) {
                                     null,
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { activeClassName: 'active', to: '/' },
+                                        { activeStyle: { background: "#e7e7e7" }, to: '/' },
                                         '\u9996\u9875'
                                     )
                                 ),
@@ -37936,7 +37911,7 @@ var Navs = function (_React$Component) {
                                     { className: 'navbar-right' },
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { activeClassName: 'active', to: '/user/signup' },
+                                        { activeStyle: { background: "#e7e7e7" }, to: '/user/signup' },
                                         '\u6CE8\u518C'
                                     )
                                 ),
@@ -37945,7 +37920,7 @@ var Navs = function (_React$Component) {
                                     { className: 'navbar-right' },
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { activeClassName: 'active', to: '/user/signin' },
+                                        { activeStyle: { background: "#e7e7e7" }, to: '/user/signin' },
                                         '\u767B\u5F55'
                                     )
                                 )
@@ -37954,19 +37929,30 @@ var Navs = function (_React$Component) {
                     )
                 );
             };
-            var NavsChild = function NavsChild() {
-                return _react2.default.createElement(
-                    'div',
-                    { className: 'container' },
-                    _react2.default.cloneElement(_this4.props.children)
-                );
-            };
-
+            /*var NavsChild=()=>{
+                return (
+                    <div className="container">
+                        {React.cloneElement(this.props.children)}
+                     </div>
+                )
+            }*/
+            /*var NavsChild=()=>{
+                console.log(this.props.children,'childern')
+                return (
+                    <div className="container">
+                        {React.cloneElement(this.props.children,{isSuper:this.state.isSuper})}
+                    </div>
+                )
+            }*/
             return _react2.default.createElement(
                 'div',
                 null,
                 this.state.localUser ? _react2.default.createElement(Login, null) : _react2.default.createElement(NoLogin, null),
-                _react2.default.createElement(NavsChild, { aa: 'ssbb' })
+                _react2.default.createElement(
+                    'div',
+                    { className: 'container' },
+                    _react2.default.cloneElement(this.props.children, { isSuper: this.state.isSuper })
+                )
             );
         }
     }]);
@@ -38204,7 +38190,7 @@ var ArticleAdd = function (_React$Component) {
                         { htmlFor: 'contain', className: 'col-md-2' },
                         '\u6B63\u6587'
                     ),
-                    _react2.default.createElement('textarea', { cols: '30', rows: '10', className: 'col-md-10', name: 'content', id: 'contain', value: this.state.valueContent, onChange: this.handleChangeC.bind(this) })
+                    _react2.default.createElement('textarea', { cols: '30', rows: '10', className: 'col-md-10', name: 'content', id: 'contain', value: this.state.valueContent, onChange: this.handleChangeT.bind(this) })
                 ),
                 _react2.default.createElement(
                     'button',
@@ -38276,9 +38262,6 @@ var ArticleDetail = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (ArticleDetail.__proto__ || Object.getPrototypeOf(ArticleDetail)).call(this, props));
 
         _this.state = { article: {}, localUser: null, err: null, success: null };
-        console.log(_this.props, '2222222');
-        console.log(_this.props.route.superAdmin, '333333');
-        console.log(_this.props.routes, '4444');
         return _this;
     }
 
@@ -38356,7 +38339,7 @@ var ArticleDetail = function (_React$Component) {
                     _react2.default.createElement('div', { dangerouslySetInnerHTML: Script1 }),
                     _react2.default.createElement('div', { dangerouslySetInnerHTML: Script2 })
                 ),
-                _react2.default.createElement(_CommentBox2.default, { store: _commentAjax2.default, superAdmin: this.props.route.superAdmin })
+                _react2.default.createElement(_CommentBox2.default, { store: _commentAjax2.default, isSuper: this.props.isSuper })
             );
         }
     }]);
@@ -38613,7 +38596,7 @@ exports = module.exports = __webpack_require__(238)();
 
 
 // module
-exports.push([module.i, ".navbar-right img{\n    width:50px;\n    height:50px;\n}\n.media-left img{\n    width:60px;\n    height:60px;\n}\n.dropdown-toggle img{\n    width: 40px;\n    height: 40px;\n\n}\n.dropdown-toggle{\n    padding:5px!important;\n}\n\n.commentItem{\n    padding-bottom: 10px;\n    margin-bottom: 10px;\n    border-bottom: 1px dotted silver;\n}\n.commentItem:after{\n    content: '';\n    display:block;\n    clear: both;\n}\n.commentItem>div{\n    margin-bottom: 10px;\n}\n.commentContent{\n    padding-left:.5em;\n    text-indent: 1em;\n}\nli {\n    list-style:none;\n}\nnav a.active{\n    background:#e7e7e7 ;\n}", ""]);
+exports.push([module.i, ".navbar-right img{\n    width:50px;\n    height:50px;\n}\n.media-left img{\n    width:60px;\n    height:60px;\n}\n.dropdown-toggle img{\n    width: 40px;\n    height: 40px;\n\n}\n.dropdown-toggle{\n    padding:5px!important;\n}\n\n.commentItem{\n    padding-bottom: 10px;\n    margin-bottom: 10px;\n    border-bottom: 1px dotted silver;\n}\n.commentItem:after{\n    content: '';\n    display:block;\n    clear: both;\n}\n.commentItem>div{\n    margin-bottom: 10px;\n}\n.commentContent{\n    padding-left:.5em;\n    text-indent: 1em;\n}\nli {\n    list-style:none;\n}\n/*\nnav a.active{\n    background:#e7e7e7 ;\n    color: red;\n}*/\n", ""]);
 
 // exports
 

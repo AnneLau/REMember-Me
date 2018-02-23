@@ -6,7 +6,7 @@ module.exports={
     entry:'./src/index.js',
     output:{
         path:path.resolve('./build'),
-        filename:'bundle.js'
+        filename:'/bundle.js'
     },
     devServer:{
         //指定静态文件根目录

@@ -9,9 +9,6 @@ export default class ArticleDetail extends React.Component{
     constructor(props){
         super(props)
         this.state={article:{},localUser:null,err:null,success:null}
-        console.log(this.props,'2222222')
-        console.log(this.props.route.superAdmin,'333333')
-        console.log(this.props.routes,'4444')
     }
     componentWillMount(){
 
@@ -62,7 +59,7 @@ export default class ArticleDetail extends React.Component{
                     <div dangerouslySetInnerHTML={Script1}/>
                     <div dangerouslySetInnerHTML={Script2}/>
                 </div>
-                <CommentBox store={commentAjax} superAdmin={this.props.route.superAdmin}/>
+                <CommentBox store={commentAjax} isSuper={this.props.isSuper}/>
 
             </div>
         )
