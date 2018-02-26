@@ -6,7 +6,7 @@ var commentAjax= {
     //增加一条新的留言
     add(comment,cb){
         console.log(comment)
-        $.post(`http://${host}:29323/comments`,comment).done(function (data) {
+        $.post(`/comments`,comment).done(function (data) {
             cb&&cb(data)
         })
     },
@@ -23,7 +23,7 @@ var commentAjax= {
     // localStorage只能存放字符串
     query(cb){
         console.log('获取留言')
-        $.get(`http://${host}:29323/comments`).done(function (data) {
+        $.get(`/comments`).done(function (data) {
             cb&&cb(data)
         })
     }

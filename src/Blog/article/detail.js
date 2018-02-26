@@ -1,29 +1,21 @@
 import React from 'react'
 import $ from 'jquery'
 import {Link} from 'react-router'
-import store from '../store/index'
 import CommentBox from '../CommentBox';
-import commentAjax from '../store/commentAjax'
-import localUser from '../localUser'
 export default class ArticleDetail extends React.Component{
     constructor(props){
         super(props)
         this.state={article:{},localUser:null,err:null,success:null}
     }
     componentWillMount(){
-
-        $.get(`get/${this.props.params.id}`).then((article)=>{/////////////////////////路径
+        $.get(`/articles/${this.props.params.id}`).then((article)=>{/////////////////////////路径
             this.setState({article})
         })
-        $.get('/localUser').then((data)=>{
-            this.setState({localUser:data.localUser,err:data.err,success:data.success})
-            localUser.set(data.localUser)
-        })
-
+        this.setState({localUser:this.props.localUser})
     }
 
     del(id){
-        store.del(id,(data)=>{
+        this.props.store.del(id,(data)=>{
             if(data.err==0){
                 this.props.router.push('/')
             }
@@ -55,11 +47,11 @@ export default class ArticleDetail extends React.Component{
                         {this.state.article.title}
                     </div>
                     <div className="panel-body " id="mk">{this.state.article.content}</div>
-                    {this.state.localUser&&this.state.localUser._id==this.state.article.user?<UserOption/>:null}
+                    {(this.props.localUser&&this.props.localUser._id==this.state.article.user)||this.props.isSuper?<UserOption/>:null}
                     <div dangerouslySetInnerHTML={Script1}/>
                     <div dangerouslySetInnerHTML={Script2}/>
                 </div>
-                <CommentBox store={commentAjax} isSuper={this.props.isSuper}/>
+                <CommentBox commentAjax={this.props.commentAjax} isSuper={this.props.isSuper} local={this.props.local}/>
 
             </div>
         )

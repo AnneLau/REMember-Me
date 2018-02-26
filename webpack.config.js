@@ -1,13 +1,14 @@
 var path=require('path')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OpenBrowserWebpackPlugin = require('open-browser-webpack-plugin');
-console.log(path.resolve('build'))
 module.exports={
     entry:'./src/index.js',
     output:{
         path:path.resolve('./build'),
         filename:'/bundle.js'
     },
+    //启用观察者模式，npm run build --watch或npm run webpack --watch，只要entey指定的入口文件有变化，就会自动编译
+    watch:true,
     devServer:{
         //指定静态文件根目录
         stats: { colors: true },

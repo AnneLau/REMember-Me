@@ -1,0 +1,72 @@
+paths:/localUser
+type:'get',
+send:{
+    localUser:'xx',
+    err:'xx',
+    successs:'xx'
+}
+
+打开登录页面
+paths:/session/new
+get
+
+登录
+paths:/session
+post
+
+退出
+paths:/session
+delete
+
+
+注册页面
+paths:/users/new
+get
+
+提交注册
+paths:/users
+post
+
+更改密码页面
+paths:/users/12444
+get
+
+提交更改密码
+paths:/users/12344
+post
+
+
+获取所有文章列表
+paths:/articles
+type:'get',
+send:[]
+
+提交一篇文章
+paths:/articles
+type:'post',
+send:{
+    title:xx,
+    content:xx
+}
+
+获取一篇文章
+paths:articles/:id
+type:'get',
+send:{
+    title:xx,
+    content:xx
+}
+
+删除一篇文章
+paths:articles/:id
+type:'detlet',
+send:{}
+
+修改一篇文章
+paths:articles/:id
+type:'put'
+send:{
+    title:xx,
+    contnet:xx
+}
+

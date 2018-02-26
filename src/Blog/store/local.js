@@ -1,4 +1,4 @@
-var localUser={
+var local={
     del(){
         localStorage.removeItem('LOCALUSER')
     },
@@ -13,4 +13,4 @@ var localUser={
         return str?JSON.parse(str):false
     }
 }
-export default localUser
+export default local

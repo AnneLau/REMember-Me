@@ -1,7 +1,7 @@
 import $ from 'jquery'
 var store= {
     del(id,cb){
-        $.get('/article/delete/'+id).then(
+        $.delete('/articles/'+id).then(
             (data)=>{
                 cb&&cb(data)
             }
