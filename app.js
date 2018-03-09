@@ -35,27 +35,21 @@ app.use(expressSession({
         url:'mongodb://127.0.0.1/blog'
     })
 }))
-//res.locals是真正的渲染对象
+var tmp=1
 app.use(function (req,res,next) {
-    //res.locals.err=req.session.err
-    //res.locals.success=req.session.success
     //req.session.err=null
-    req.session.success=null
+    //req.session.success=null
     //req.session.user=null
-    console.log(req.session.user,'mmmmmmmmm')
+    console.log(req.session.user,'mmmmmmmmm',tmp++)
     //res.locals.user=req.session.user
     next()
 })
-
 var user=require('./routes/user')
 var article=require('./routes/article')
 var index=require('./routes/index')
 var about=require('./routes/about')
 var comment=require('./routes/comment')
 var session=require('./routes/session')
-//解决刷新找不到的问题
-
-
 app.use('/',index)
 app.use('/users',user)
 app.use('/articles',article)

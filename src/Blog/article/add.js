@@ -1,5 +1,4 @@
 import React from 'react'
-import $ from 'jquery'
 export default class ArticleAdd extends React.Component{
     constructor(props){
         super(props)
@@ -7,9 +6,15 @@ export default class ArticleAdd extends React.Component{
     }
     componentWillMount(){
         if(this.props.params.id){
-            $.get(`/articles/${this.props.params.id}`).then((article)=>{
+            this.props.store.get(this.props.params.id,(article)=>{
                 this.setState({valueTitle:article.title,valueContent:article.content})
             })
+            fetch(`/articles/${this.props.params.id}`,{method:'get'})
+                .then((res)=>res.json())
+                .then((article)=>{
+                    this.setState({valueTitle:article.title,valueContent:article.content})
+
+                })
             this.setState({formAction:`/articles/${this.props.params.id}`})
         }
     }
@@ -18,6 +23,16 @@ export default class ArticleAdd extends React.Component{
     }
     handleChangeC(e){
         this.setState({valueContent:e.target.value})
+    }
+    handleClick(e){
+        if(this.state.valueTitle&&this.state.valueContent){
+            e.target.type='submit'
+
+        }
+        else{
+            alert('内容不能为空')
+
+        }
     }
     render(){
         return (
@@ -32,7 +47,7 @@ export default class ArticleAdd extends React.Component{
                     <textarea cols="30" rows="10" className="col-md-10" name="content" id="contain" value={this.state.valueContent} onChange={this.handleChangeC.bind(this)}></textarea>
                 </div>
 
-                <button type="submit" formAction={this.state.formAction} className="btn btn-default block"  >提交</button>
+                <button type="button" onClick={this.handleClick.bind(this)} formAction={this.state.formAction} className="btn btn-default block"  >提交</button>
             </form>
         )
     }

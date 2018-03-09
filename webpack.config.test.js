@@ -3,7 +3,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OpenBrowserWebpackPlugin = require('open-browser-webpack-plugin');
 console.log(path.resolve('./test/build'),1111111111111)
 module.exports={
-    entry:'./test/app.js',
+    entry:'./test/app1.js',
     output:{
         path:path.resolve('./test/build'),
         filename:'bundle.js'
@@ -36,7 +36,7 @@ module.exports={
         //创建一个自动产出html的插件`
         new HtmlWebpackPlugin({
             //指定生成依据的模板
-            template:'./test/index.html'
+            template:'./test/index1.html'
         }),
         new OpenBrowserWebpackPlugin({url:'http://localhost:8888'})
         ]

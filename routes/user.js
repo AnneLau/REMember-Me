@@ -14,7 +14,7 @@ router.get('/new',function (req,res) {
     res.sendFile(path.resolve('build/index.html'))
 })
 //提交注册
-router.post('/',auth.checkNoLogin,upload.single('avatar'),function (req,res) {
+router.post('/',upload.single('avatar'),function (req,res) {
     var body=req.body
     if(req.file){
         body.avatar = '/'+req.file.filename;
@@ -26,12 +26,14 @@ router.post('/',auth.checkNoLogin,upload.single('avatar'),function (req,res) {
         }
         else if(oldUser){
             req.session.err='用户名已被占用'
+            //由于是form表单，只能返回了
             res.redirect('back')
         }
         else{
             User.create(body,function (err,doc) {
                 if(doc){
-                    //req.session.user = doc//把保存后的对象作为req.session;session对象是在服务器端内存放置的
+                    console.log('000000000000000000000000000000000')
+                    req.session.user = doc//把保存后的对象作为req.session;session对象是在服务器端内存放置的
                     res.redirect('/')
                 }
             })
@@ -46,27 +48,27 @@ router.get('/:id',function (req,res) {
 })
 //提交修改
 router.post('/:_id',auth.checkLogin,upload.single('avatar'),function (req,res) {
-    var password=req.body.password
+    var newPassword=req.body.newPassword
     var user={}
-    console.log(req.session.user,111111111)
     Object.assign(user,req.session.user)
-    console.log(user,222222222)
-    user.password=password
+    user.password=newPassword
     var _id=req.params._id
     if(req.file){
         user.avatar = '/'+req.file.filename;
     }
-    /*User.update({_id},user,function (err,user) {
+    User.update({_id},user,function (err,data) {
         if(err){//数据库出现问题，导致出错
             req.session.err=err
             res.redirect('back')
         }
         else{
+            console.log(user)
             req.session.success='修改成功'
-            res.send()
+            req.session.user=user
+            res.send({err:0,user})
         }
 
-    })*/
+    })
 })
 
 

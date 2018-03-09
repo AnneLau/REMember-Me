@@ -1,5 +1,4 @@
 import React from 'react'
-import $ from 'jquery'
 export default class Whether extends React.Component{
     constructor(){
         super()
@@ -10,20 +9,24 @@ export default class Whether extends React.Component{
         // 直接发送请求进行调用，手动处理回调函数
         var that=this
         function setDate() {
-            $.getJSON(url, function(data) {
-                if(data.data){
-                    data=data.data
-                    console.log(this,1)
-                    that.setState({
-                        tq:data.tq,
-                        qw:data.qw,
-                        sd:data.sd,
-                        fl:data.fl,
-                        fx:data.fx,
-                        lastUpdate:data.lastUpdate
-                    })
-                }
-            });
+            fetch(url,{})
+                .then((data)=>data.json())
+                .then((data)=>{
+                    if(data.data){
+                        data=data.data
+                        that.setState({
+                            tq:data.tq,
+                            qw:data.qw,
+                            sd:data.sd,
+                            fl:data.fl,
+                            fx:data.fx,
+                            lastUpdate:data.lastUpdate
+                        })
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
         }
         setDate()
         setInterval(setDate,600000)

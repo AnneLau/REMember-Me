@@ -1,5 +1,4 @@
 import React from 'react'
-import $ from 'jquery'
 import { Router, Route, browserHistory ,Link,IndexRoute } from 'react-router';
 import local from '../store/local'
 import commentAjax from '../store/commentAjax'
@@ -11,40 +10,41 @@ class Navs extends React.Component{
         this.state ={localUser:null,err:null,success:null,isSuper:false,bread:null}
     }
     componentWillMount(){
-        $.get('/localUser').then((data)=>{
-            console.log(data,'localuser')
-            this.setState({localUser:data.localUser,err:data.err,success:data.success})
-            local.set(data.localUser)
-            //判断超级是否是超级用户
-            var user=local.query()
-            if(user){
-                this.setState({isSuper:user.username=='simba'})
-            }
-            else{
-                this.setState({isSuper:false})
-            }
-        })
+        fetch('/localUser',{credentials: 'include'})
+            .then((data)=>{
+                return data.json()
+            })
+            .then((data)=>{
+                this.setState({localUser:data.localUser,err:data.err,success:data.success})
+                local.set(data.localUser)
+                //判断超级是否是超级用户
+                var user=local.query()
+                if(user){
+                    this.setSuper(user)
+                }
+                else{
+                    this.setState({isSuper:false})
+                }
+            })
 
     }
+    setStateuser(localUser){
+        this.setState({localUser})
+    }
+    setSuper(user){
+        this.setState({isSuper:user.username=='simba'})
+    }
     handleClick(){
-        fetch('/session',{method:'delete'})
+        fetch('/session',{method:'delete',credentials:'include'})
             .then( (res)=> {
                 return res.json()
             })
             .then( (res)=>{
                 if(res.err==0){
                     local.del()
-                    console.log(local.query(),11111)
                     this.setState({localUser:null,isSuper:false})
                 }
             })
-        /*$.delete('/session').then((data)=>{
-            if(data.err==0){
-                local.del()
-                this.setState({localUser:null,isSuper:false})
-            }
-
-        })*/
     }
     changeBread(bread){
         this.setState({bread:bread})
@@ -100,7 +100,6 @@ class Navs extends React.Component{
                 </div>
             )
         }*/
-        console.log(local.query(),'shouye')
 
         return (
             <div>
@@ -111,7 +110,7 @@ class Navs extends React.Component{
                     <li className="active">{this.state.bread}</li>
                     {/*<li className="active">十一月</li>*/}
                 </ol>
-                <div className="container">{React.cloneElement(this.props.children,{isSuper:this.state.isSuper,localUser:this.state.localUser,local,commentAjax,store,changeBread:this.changeBread})}</div>
+                <div className="container">{React.cloneElement(this.props.children,{isSuper:this.state.isSuper,localUser:this.state.localUser,setStateuser:this.setStateuser.bind(this),setSuper:this.setSuper.bind(this),local,commentAjax,store,changeBread:this.changeBread})}</div>
             </div>
         )
     }

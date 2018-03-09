@@ -1,5 +1,4 @@
 import React from 'react'
-import $ from 'jquery'
 import { Router, Route, browserHistory ,Link,IndexRoute } from 'react-router';
 
 

@@ -1,14 +1,17 @@
 import React from 'react'
-import $ from 'jquery'
 import {Link} from 'react-router'
 import CommentBox from '../CommentBox';
 export default class ArticleDetail extends React.Component{
     constructor(props){
         super(props)
         this.state={article:{},localUser:null,err:null,success:null}
+        console.log(this.props.isSuper)
     }
     componentWillMount(){
-        $.get(`/articles/${this.props.params.id}`).then((article)=>{/////////////////////////路径
+        /*$.get(`/articles/${this.props.params.id}`).then((article)=>{/////////////////////////路径
+            this.setState({article})
+        })*/
+        this.props.store.get(this.props.params.id,(article)=>{
             this.setState({article})
         })
         this.setState({localUser:this.props.localUser})

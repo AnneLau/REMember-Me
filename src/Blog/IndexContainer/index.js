@@ -1,5 +1,4 @@
 import React from  'react'
-import $ from 'jquery'
 import {Link} from 'react-router'
 import Whether from '../Whether'
 import IndexRight from '../IndexRight'
@@ -9,18 +8,14 @@ export default class IndexContainer extends React.Component{
         this.state={articles:[]}
     }
     componentWillMount(){
-        $.get('/articles').then(
-            (articles)=>{
-                this.setState({articles})
-            }
-        )
+
+        this.props.store.getAll((articles)=>{
+            this.setState({articles})
+        })
     }
     render(){
         return (
             <div>
-
-
-
                 <div className="col-md-6 col-md-offset-1">
                     {this.state.articles.map((item,index)=>(
                         <div className="media table table-bordered" key={index}>
@@ -37,7 +32,7 @@ export default class IndexContainer extends React.Component{
                 <div className="pull-right col-md-3 ">
                     <IndexRight />
                 </div>
-                {/*<Whether/>*/}
+                <Whether/>
             </div>
         )
     }

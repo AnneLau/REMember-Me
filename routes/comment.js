@@ -11,8 +11,8 @@ var getName=function (_id,cb) {
 }
 //增加留言
 router.post('/',auth.checkLogin,function(req,res){
-    console.log('add')
     var comment=req.body
+    console.log(comment,101010)
     comment.user=req.session.user._id
     //comment.article=id
     var article=/\/(\w+)$/.exec(req.headers.referer)[1]
@@ -28,6 +28,7 @@ router.post('/',auth.checkLogin,function(req,res){
                     })
                 })
             }*/
+            console.log(docs)
             res.send(docs)
         })
     })

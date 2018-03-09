@@ -9,8 +9,8 @@ export default class CommentForm extends Component{
         this.ctrl = false;
     }
     addComment(){
-        var content = this.refs.content.value;
-        this.props.addComment({name,content});
+        var content = this.refs.content.value
+        this.props.addComment({content});
         this.refs.content.value = '';
     }
     handleKeyDown(event){
@@ -31,7 +31,7 @@ export default class CommentForm extends Component{
     }
     render(){
         return (
-            <form className="form-horizontal" role="form">
+            <form className="form-horizontal" role="form" ref="form" method="post">
 
                 <div className="form-group">
                     <label className="control-label  col-md-1" htmlFor="content">内容</label>

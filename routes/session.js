@@ -3,9 +3,8 @@ var router=express.Router()
 var User=require('../db').User
 var path=require('path')
 var auth=require('./auth')
-
 router.route('/')
-    .all(function (req,res,next) {
+    .all( (req,res,next)=>{
         console.log(req.session.user,1111)//
         next()
     })
@@ -14,9 +13,10 @@ router.route('/')
         var body=req.body
         User.findOne(body,function (e,doc) {
             if(doc){
-                console.log(req.session.user,2222)//
                 req.session.user = doc
-                res.redirect('/')
+                res.send({err:0,user:doc})
+                console.log(req.session.user,'denglu')
+
             }
             else{
                 req.session.err='用户密码错误'
@@ -25,8 +25,8 @@ router.route('/')
         })
     })
     //退出
-    .delete(auth.checkLogin,function (req,res) {
-        req.session.user=''
+    .delete(function (req,res) {
+        req.session.user=null
         res.send({err:0})
     })
 router.get('/new',function (req,res) {

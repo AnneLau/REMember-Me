@@ -1,5 +1,4 @@
 import React from 'react'
-import $ from 'jquery'
 import { Router, Route, browserHistory ,Link,IndexRoute,Redirect } from 'react-router';
 import ArticleAdd from './article/add'
 import UserSignup from './user/signup'
