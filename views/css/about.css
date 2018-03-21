@@ -38,12 +38,25 @@ a{
     text-decoration: none;
 }
 #home{
-    display: inline-block;
     position: fixed;
     z-index: 2;
     bottom: 0;
     right: 0;
 }
+#home a{
+    display: inline-block;
+}
+@media screen and (min-width: 768px) {
+    #home a{
+        font-size: 20px;
+    }
+}
+@media screen and (max-width: 768px) {
+    #home a{
+        font-size: 50px;
+    }
+}
+
 #home:hover a{
     color: silver;
 }

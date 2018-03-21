@@ -51,12 +51,20 @@ class Navs extends React.Component{
     }
     render(){
         const Login = ()=>{
-            return (<div>
-                <nav className="navbar navbar-default" role="navigation">
+            return (
+                <nav className="navbar navbar-default navbar-fixed-top" role="navigation">
                     <div className="container-fluid">
                         <div className="navbar-header">
                             <a className="navbar-brand" href="/about">Simba Blog</a>
+                            <button type="button" className="navbar-toggle" data-toggle="collapse"
+                                    data-target="#top-nav">
+                                <span className="sr-only">切换导航</span>
+                                <span className="icon-bar"></span>
+                                <span className="icon-bar"></span>
+                                <span className="icon-bar"></span>
+                            </button>
                         </div>
+                        <div className="collapse navbar-collapse" id="top-nav">
                         <ul className="nav navbar-nav col-md-11 " >
                             <li ><Link activeStyle={{background:"#e7e7e7"}} to="/">首页</Link></li>
                             <li><Link activeStyle={{background:"#e7e7e7"}} to="/article/add">发表文章</Link></li>
@@ -72,25 +80,35 @@ class Navs extends React.Component{
                             </li>
                             <li className="navbar-right"><Link activeStyle={{background:"#e7e7e7"}}  to="/user/new">注册</Link></li>
                         </ul>
+                        </div>
                     </div>
                 </nav>
-            </div>)
+            )
         }
         const NoLogin = ()=>{
-            return ( <div>
-                <nav className="navbar navbar-default" role="navigation">
+            return (
+                <nav className="navbar navbar-default navbar-fixed-top " role="navigation">
                     <div className="container-fluid">
                         <div className="navbar-header">
-                            <Link className="navbar-brand" to="/about">Simba Blog</Link>
+                            <a className="navbar-brand" href="/about">Simba Blog</a>
+                            <button type="button" className="navbar-toggle" data-toggle="collapse"
+                                    data-target="#top-nav">
+                                <span className="sr-only">切换导航</span>
+                                <span className="icon-bar"></span>
+                                <span className="icon-bar"></span>
+                                <span className="icon-bar"></span>
+                            </button>
                         </div>
-                        <ul className="nav navbar-nav col-md-11 " >
-                            <li ><Link activeStyle={{background:"#e7e7e7"}}  to="/">首页</Link></li>
-                            <li className="navbar-right" ><Link activeStyle={{background:"#e7e7e7"}}  to="/user/new">注册</Link></li>
-                            <li className="navbar-right"><Link activeStyle={{background:"#e7e7e7"}}  to="/session">登录</Link></li>
-                        </ul>
+                        <div className="collapse navbar-collapse" id="top-nav">
+                            <ul className="nav navbar-nav col-md-11 " >
+                                <li ><Link activeStyle={{background:"#e7e7e7"}}  to="/">首页</Link></li>
+                                <li className="navbar-right" ><Link activeStyle={{background:"#e7e7e7"}}  to="/user/new">注册</Link></li>
+                                <li className="navbar-right"><Link activeStyle={{background:"#e7e7e7"}}  to="/session">登录</Link></li>
+                            </ul>
+                        </div>
                     </div>
                 </nav>
-            </div>)
+            )
         }
         /*var NavsChild=()=>{
 
@@ -105,12 +123,10 @@ class Navs extends React.Component{
             <div>
                 {this.state.localUser? <Login/>: <NoLogin/>}
                 {/*<NavsChild />*/}
-                <ol className="breadcrumb container">
-                    <li><a href="/">Home</a></li>
-                    <li className="active">{this.state.bread}</li>
-                    {/*<li className="active">十一月</li>*/}
-                </ol>
-                <div className="container">{React.cloneElement(this.props.children,{isSuper:this.state.isSuper,localUser:this.state.localUser,setStateuser:this.setStateuser.bind(this),setSuper:this.setSuper.bind(this),local,commentAjax,store,changeBread:this.changeBread})}</div>
+
+                <div className="container main">
+                    {React.cloneElement(this.props.children,{isSuper:this.state.isSuper,localUser:this.state.localUser,setStateuser:this.setStateuser.bind(this),setSuper:this.setSuper.bind(this),local,commentAjax,store,changeBread:this.changeBread})}
+                    </div>
             </div>
         )
     }

@@ -37,7 +37,7 @@ export default class Whether extends React.Component{
     render(){
 
         return(
-            <div ref="btn"  className="col-md-4 col-md-offset-9" style={{background:"#eee",padding:"10px",borderRadius:"8px",color:"#555",fontWeight:"600",overflow:"hidden"}}>
+            <div ref="btn"  className="col-md-9 col-md-offset-1" style={{background:"#eee",padding:"10px",borderRadius:"8px",color:"#555",fontWeight:"600",overflow:"hidden"}}>
                 <div className="text-center" style={{fontSize:"28px"}}>{this.state.tq}</div>
                 <div>
                     <div style={{fontSize:"16px"}} className="col-md-6">气温：{this.state.qw}</div>

@@ -1,4 +1,6 @@
 import React from 'react'
+import showndown from 'showdown'
+let converter=new Showdown.converter()
 export default class ArticleAdd extends React.Component{
     constructor(props){
         super(props)

@@ -14,9 +14,8 @@ export default class CommentBox extends Component{
     //向状态 comments里增加一个新的对象
     //在es6中，组件方法里的this默认向指定null
     addComment(comment){
-        console.log(comment)
         if(!this.props.local.query()){
-            browserHistory.push('/user/signin')////////////////////与this.props.router.push('/')
+            browserHistory.push('/session')////////////////////与this.props.router.push('/')
             return
         }
        this.props.commentAjax.add(comment,(comments)=>{

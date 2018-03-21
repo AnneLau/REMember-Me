@@ -14,6 +14,8 @@ var ArticleSchema=new mongoose.Schema({
     title:String,
     content:String,
     createAt:Date,
+    times:Number,
+    description:String,
     user:{type:ObjectId,ref:'User'}//这个User是引用的模块
 },{collection:'article'})
 exports.Article = mongoose.model('Article',ArticleSchema);

@@ -35,8 +35,22 @@
 li {
     list-style:none;
 }
+
 /*
 nav a.active{
     background:#e7e7e7 ;
     color: red;
 }*/
+.main{
+    margin-top: 80px;
+}
+
+/*detail页面*/
+.image-package{
+    width: 100%;
+    padding-bottom: 25px;
+    box-sizing: border-box;
+}
+.image-package img{
+    max-width: 100%;
+}

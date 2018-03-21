@@ -2,20 +2,26 @@ var express=require('express')
 var router=express.Router()
 var Article=require('../db').Article
 var path=require('path')
-
+var getArticles=require('./store/getArticles')
+var getArticle=require('./store/getArticle')
 router.route('/')
     .all(function (req,res,next) {
 
         next()
     })
     .get(function (req,res) {
-            Article.find({}).populate('user').exec(function (err,articles) {
+        Article.find({}).populate('user').exec(function (err,articles) {
+            getArticles((otherArticles)=>{
+                articles=articles.concat(otherArticles)
                 res.send(articles)
             })
+        })
+
     })
     .post(function (req,res) {
         var body=req.body
         body.user=req.session.user._id//article~~~~~~~~~~~~~~~~~~~~~~~~
+        body.description=body.content
         Article.create(body,function (err,doc) {
             if(err){
                 req.session.err=err
@@ -27,11 +33,33 @@ router.route('/')
             }
         })
     })
-
-
+router.route('/p/:_id')
+    .get(function (req,res) {
+        var _id=req.params._id
+        _id='/p/'+_id
+        getArticle(_id,function (article) {
+            res.send(article)
+        })
+    })
+router.route('/:_id/times/:times')
+    .post(function (req,res) {
+        var _id=req.params._id
+        var times=req.params.times
+        Article.update({_id},{$set:{times:++times}},function (err,article) {
+            if(err){
+                req.session.err=err
+                //可能会出问题。。。。。。。。。。。。。。。。。
+                res.redirect('back')
+            }
+            if(article){
+                //res.redirect('/article/detail/'+req.params._id);
+                res.send({err:0})
+            }
+        })
+    })
 router.route('/:_id')
     .all(function (req,res,next) {
-        console.log('')
+        console.log(req.params._id)
         next()
     })
     .get(function (req,res) {
@@ -42,8 +70,8 @@ router.route('/:_id')
         })
     })
     .post(function (req,res) {
-        console.log('pst a')
         var _id=req.params._id
+        req.body.description=req.body.conent
         Article.update({_id},req.body,function (err,article) {
             if(err){
                 req.session.err=err
@@ -58,8 +86,8 @@ router.route('/:_id')
         })
     })
     .delete(function (req,res) {
-    var _id=req.params._id
-    Article.remove({_id},function (err,result) {
+        var _id=req.params._id
+        Article.remove({_id},function (err,result) {
         if(err){
             req.session.err=err
         }

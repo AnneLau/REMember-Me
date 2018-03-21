@@ -21,7 +21,7 @@ export default class  extends React.Component{
                     <Route path='user/new' component={UserSignup}></Route>
                     <Route path='session' component={UserSignin}></Route>
                     <Route path='article/add' component={ArticleAdd}></Route>
-                    <Route path='article/detail/:id' component={ArticelDetail}  />
+                    <Route path='article/detail/:id(/:outer)' component={ArticelDetail}  />
                     <Route path='article/update/:id' component={ArticleAdd}></Route>
                     <Route path='users/:id' component={UpdatePassword}></Route>
                 </Route>

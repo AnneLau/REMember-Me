@@ -67,4 +67,4 @@ app.get('*',function (req,res) {
 })
 //app.use(history())
 
-app.listen(29323)
+app.listen(80)

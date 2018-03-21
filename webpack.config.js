@@ -40,6 +40,6 @@ module.exports={
             //指定生成依据的模板
             template:'./src/index.html'
         }),
-        new OpenBrowserWebpackPlugin({url:'http://localhost:29323'})
+        new OpenBrowserWebpackPlugin({url:'http://localhost'})
         ]
 }

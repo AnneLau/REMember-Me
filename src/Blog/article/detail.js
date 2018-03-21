@@ -5,14 +5,30 @@ export default class ArticleDetail extends React.Component{
     constructor(props){
         super(props)
         this.state={article:{},localUser:null,err:null,success:null}
-        console.log(this.props.isSuper)
     }
     componentWillMount(){
         /*$.get(`/articles/${this.props.params.id}`).then((article)=>{/////////////////////////路径
             this.setState({article})
         })*/
-        this.props.store.get(this.props.params.id,(article)=>{
+
+        let params=this.props.params
+        let id=params.id
+        let outer=params.outer
+
+        id=outer?id+'/'+outer:id
+        this.props.store.get(id,(article)=>{
             this.setState({article})
+            article.times=article.times?article.times:1
+            if(!outer){
+                fetch(`/articles/${id}/times/${article.times}`,{
+                    method:'post',
+                    credentials: 'include',
+                })
+                    .then((data)=>data.json())
+                    .then((data)=>{
+                        console.log(data)
+                    })
+            }
         })
         this.setState({localUser:this.props.localUser})
     }
@@ -37,6 +53,11 @@ export default class ArticleDetail extends React.Component{
                 mk()
             </script>`
         }
+        const renderHtml=(str)=>{
+            return {
+                __html:str
+            }
+        }
          var UserOption=()=>(
             <div className="panel-footer">
                 <Link to={"/article/update/"+this.state.article._id} className="btn btn-warning" >修改</Link>
@@ -44,12 +65,15 @@ export default class ArticleDetail extends React.Component{
             </div>
         )
         return(
-            <div className="col-md-6 ">
-                <div className="panel panel-default">
-                    <div className="panel-heading" >
-                        {this.state.article.title}
+            <div className="col-md-7 col-md-offset-3">
+                <div className="panel panel-default" style={{border:'none',background:'white'}}>
+                    <div className="panel-heading" style={{background:'white'}}>
+                        <h1>
+                            {this.state.article.title}
+                        </h1>
+                        {this.state.article.originUrl?(<div>转自<a href={this.state.article.originUrl}>{this.state.article.originUrl}</a></div>):null}
                     </div>
-                    <div className="panel-body " id="mk">{this.state.article.content}</div>
+                    <div className="panel-body " id="mk" dangerouslySetInnerHTML={renderHtml(this.state.article.content)}></div>
                     {(this.props.localUser&&this.props.localUser._id==this.state.article.user)||this.props.isSuper?<UserOption/>:null}
                     <div dangerouslySetInnerHTML={Script1}/>
                     <div dangerouslySetInnerHTML={Script2}/>
