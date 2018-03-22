@@ -1,5 +1,4 @@
 const COMMENTS = 'COMMENTS';
-const host="localhost"
 var commentAjax= {
     //增加一条新的留言
     add(comment,cb){

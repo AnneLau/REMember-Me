@@ -2,7 +2,7 @@ import React from 'react'
 import { Router, Route, browserHistory ,Link,IndexRoute } from 'react-router';
 import local from '../store/local'
 import commentAjax from '../store/commentAjax'
-import store from '../store/ajax'
+import articleAjax from '../store/articleAjax'
 
 class Navs extends React.Component{
     constructor(props){
@@ -45,9 +45,6 @@ class Navs extends React.Component{
                     this.setState({localUser:null,isSuper:false})
                 }
             })
-    }
-    changeBread(bread){
-        this.setState({bread:bread})
     }
     render(){
         const Login = ()=>{
@@ -125,7 +122,7 @@ class Navs extends React.Component{
                 {/*<NavsChild />*/}
 
                 <div className="container main">
-                    {React.cloneElement(this.props.children,{isSuper:this.state.isSuper,localUser:this.state.localUser,setStateuser:this.setStateuser.bind(this),setSuper:this.setSuper.bind(this),local,commentAjax,store,changeBread:this.changeBread})}
+                    {React.cloneElement(this.props.children,{isSuper:this.state.isSuper,localUser:this.state.localUser,setStateuser:this.setStateuser.bind(this),setSuper:this.setSuper.bind(this),local,commentAjax,articleAjax})}
                     </div>
             </div>
         )

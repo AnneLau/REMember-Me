@@ -35,16 +35,6 @@ export default class UserSignup extends React.Component{
                     <input type="file" name="avatar" className="form-control" id="avatar" />
                 </div>
                 <button type="button" onClick={this.handleClick.bind(this)}  className="form-group btn btn-success col-md-12 btn-bs">Sign up</button>
-                {/*{<script>
-                    document.querySelector('button').onclick=function () {
-                        var name=document.querySelector('#username').value,
-                        pass=document.querySelector('#password').value,
-                        email=document.querySelector('#email').value;
-                        if(name&&pass&&email){
-                            document.querySelector('form').submit()
-                        }
-                    }
-                </script>}*/}
             </form>
         )
     }

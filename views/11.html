@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            width: 200px;
+            height: 200px;
+            border:1px solid grey;
+        }
+    </style>
+</head>
+
+<body>
+<textarea name="" id="" cols="30" rows="10"></textarea>
+<div></div>
+</body>
+</html>
+<script>
+    var textarea=document.querySelector('textarea')
+    var div=document.querySelector('div')
+    textarea.onkeyup=function () {
+        var value=textarea.value
+        div.innerText=1
+    }
+    var reg=/<(p|a|h1|h2|h3|h4|h5|span|div)[\s\w]*>(.*)<\/?\1>/
+    var reg1=/^(\w+)/
+    var reg2=/(\w+)$/
+    var html='<span>123<p>111</p><div>111</div></span>'
+    var str=''
+    function toText1(html) {
+        html=html.replace(reg1,function (item,i,c) {
+            str+=item
+            return ''
+        })
+        html=html.replace(reg2,function (item,i,c) {
+            str+=item
+            return ''
+        })
+        while (reg.test(html)){
+            console.log(html)
+
+            let res=reg.exec(html)
+            html=res[2]
+            //toText(html)
+        }
+        console.log(str)
+    }
+    function toText(html,cb) {
+        let reg1=/<(p|a|h1|h2|h3|h4|h5|span|div)[^>]*>/
+        let reg2=/<\/(p|a|h1|h2|h3|h4|h5|span|div)>/
+        html=html.replace(reg1,'')
+        html=html.replace(reg2,'')
+        if(reg1.test(html)||reg2.test(html)){
+            toText(html)
+        }
+        else{
+            console.log(html)
+        }
+    }
+    toText('<span class="ab">111,22<p>222</p><div>333</div>444</span><span></span>')
+    function f() {
+        console.log(arguments.callee)
+    }
+    console.log('1234566'.slice(0,4))
+</script>

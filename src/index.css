@@ -54,3 +54,13 @@ nav a.active{
 .image-package img{
     max-width: 100%;
 }
+
+/*add页面*/
+.edit-view,.edit-input{
+    height: 400px;
+}
+@media (max-width: 763px) {
+    .edit-view,.edit-input{
+        height: 300px;
+    }
+}

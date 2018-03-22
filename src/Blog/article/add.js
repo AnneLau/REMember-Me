@@ -1,14 +1,17 @@
 import React from 'react'
 import Showdown from 'showdown'
-let converter=Showdown.converter
+let converter=new Showdown.Converter()
+let toHtml=function (text) {
+    return converter.makeHtml(text);
+}
 export default class ArticleAdd extends React.Component{
     constructor(props){
         super(props)
-        this.state={valueTitle:'',valueContent:'',formAction:'/articles'}
+        this.state={valueTitle:'',valueContent:'',html:''}
     }
     componentWillMount(){
         if(this.props.params.id){
-            this.props.store.get(this.props.params.id,(article)=>{
+            this.props.articleAjax.get(this.props.params.id,(article)=>{
                 this.setState({valueTitle:article.title,valueContent:article.content})
             })
             fetch(`/articles/${this.props.params.id}`,{method:'get'})
@@ -24,11 +27,47 @@ export default class ArticleAdd extends React.Component{
         this.setState({valueTitle:e.target.value})
     }
     handleChangeC(e){
-        this.setState({valueContent:e.target.value})
+        this.setState({valueContent:e.target.value,html:toHtml(e.target.value)})
+
+    }
+    toText(html,cb) {
+        let reg1=/<(p|a|h1|h2|h3|h4|h5|span|div)[^>]*>/
+        let reg2=/<\/(p|a|h1|h2|h3|h4|h5|span|div)>/
+        html=html.replace(reg1,'')
+        html=html.replace(reg2,'')
+        if(reg1.test(html)||reg2.test(html)){
+            this.toText(html,cb)
+        }
+        else{
+           cb(html)
+        }
     }
     handleClick(e){
         if(this.state.valueTitle&&this.state.valueContent){
-            e.target.type='submit'
+            let description
+            let title=this.state.valueTitle
+            let html=this.state.html
+            let content=this.state.valueContent
+            this.toText(html,(text)=>{
+                description=text.replace(/\n/,' ')
+                description=description.slice(0,100)
+            })
+            let article={title,content,description,html}
+
+            //修改
+            if(this.props.params.id){
+                console.log('add')
+                this.props.articleAjax.update(this.props.params.id,article,function (data) {
+                    if(data.err==0)this.props.router.push(`/article/detail/${this.props.params.id}`)
+                })
+                return
+            }
+            //新增
+            this.props.articleAjax.add(article,(data) =>{
+                if(data.err==0){
+                    this.props.router.push('/')
+                }
+            })
 
         }
         else{
@@ -38,19 +77,12 @@ export default class ArticleAdd extends React.Component{
     }
     render(){
         return (
-            <form role="form" className="form col-md-9" method="post">
-                <div>{this.state.defaultTitle}</div>
-                <div className="form-group">
-                    <label htmlFor="title" className="col-md-2">标题</label>
-                    <input type="text" className="col-md-10" name="title" id="title" value={this.state.valueTitle}  onChange={this.handleChangeT.bind(this)}/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="contain" className="col-md-2">正文</label>
-                    <textarea cols="30" rows="10" className="col-md-10" name="content" id="contain" value={this.state.valueContent} onChange={this.handleChangeC.bind(this)}></textarea>
-                </div>
-
-                <button type="button" onClick={this.handleClick.bind(this)} formAction={this.state.formAction} className="btn btn-default block"  >提交</button>
-            </form>
+            <div className="clearfix" style={{}}>
+                <input type="text" className="col-md-12"  value={this.state.valueTitle}  onChange={this.handleChangeT.bind(this)} placeholder="请输入标题"/>
+                        <textarea placeholder="在此键入。使用markdown，或html格式。"  className="col-md-6 edit-input"  value={this.state.valueContent} onChange={this.handleChangeC.bind(this)}></textarea>
+                <div style={{border:'1px solid gray'}} className="col-md-6 edit-view" dangerouslySetInnerHTML={{__html:this.state.html}}></div>
+                <button type="button" onClick={this.handleClick.bind(this)}  className="btn btn-default block  col-md-2"  >提交</button>
+            </div>
         )
     }
 }

@@ -56,7 +56,6 @@ app.use('/articles',article)
 app.use('/comments',comment)
 app.use('/about',about)
 app.use('/session',session)
-
 app.use(function (req,res) {
     res.sendFile(path.resolve('./build/index.html'))
 })

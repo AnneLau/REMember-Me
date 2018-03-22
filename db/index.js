@@ -12,10 +12,11 @@ exports.User=mongoose.model('User',UserSchema)//这是模型名
 
 var ArticleSchema=new mongoose.Schema({
     title:String,
-    content:String,
+    content:String,//编辑时的内容
     createAt:Date,
     times:Number,
     description:String,
+    html:String,
     user:{type:ObjectId,ref:'User'}//这个User是引用的模块
 },{collection:'article'})
 exports.Article = mongoose.model('Article',ArticleSchema);

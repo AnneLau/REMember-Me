@@ -27388,7 +27388,7 @@ var IndexContainer = function (_React$Component) {
         value: function componentWillMount() {
             var _this2 = this;
 
-            this.props.store.getAll(function (articles) {
+            this.props.articleAjax.getAll(function (articles) {
                 _this2.setState({ articles: articles });
             });
         }
@@ -27560,9 +27560,9 @@ var _commentAjax = __webpack_require__(233);
 
 var _commentAjax2 = _interopRequireDefault(_commentAjax);
 
-var _ajax = __webpack_require__(232);
+var _articleAjax = __webpack_require__(367);
 
-var _ajax2 = _interopRequireDefault(_ajax);
+var _articleAjax2 = _interopRequireDefault(_articleAjax);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27626,11 +27626,6 @@ var Navs = function (_React$Component) {
                     _this3.setState({ localUser: null, isSuper: false });
                 }
             });
-        }
-    }, {
-        key: 'changeBread',
-        value: function changeBread(bread) {
-            this.setState({ bread: bread });
         }
     }, {
         key: 'render',
@@ -27818,7 +27813,7 @@ var Navs = function (_React$Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'container main' },
-                    _react2.default.cloneElement(this.props.children, { isSuper: this.state.isSuper, localUser: this.state.localUser, setStateuser: this.setStateuser.bind(this), setSuper: this.setSuper.bind(this), local: _local2.default, commentAjax: _commentAjax2.default, store: _ajax2.default, changeBread: this.changeBread })
+                    _react2.default.cloneElement(this.props.children, { isSuper: this.state.isSuper, localUser: this.state.localUser, setStateuser: this.setStateuser.bind(this), setSuper: this.setSuper.bind(this), local: _local2.default, commentAjax: _commentAjax2.default, articleAjax: _articleAjax2.default })
                 )
             );
         }
@@ -27981,6 +27976,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(5);
@@ -27999,7 +27996,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var converter = _showdown2.default.converter;
+var converter = new _showdown2.default.Converter();
+var toHtml = function toHtml(text) {
+    return converter.makeHtml(text);
+};
 
 var ArticleAdd = function (_React$Component) {
     _inherits(ArticleAdd, _React$Component);
@@ -28009,7 +28009,7 @@ var ArticleAdd = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (ArticleAdd.__proto__ || Object.getPrototypeOf(ArticleAdd)).call(this, props));
 
-        _this.state = { valueTitle: '', valueContent: '', formAction: '/articles' };
+        _this.state = { valueTitle: '', valueContent: '', html: '' };
         return _this;
     }
 
@@ -28019,7 +28019,7 @@ var ArticleAdd = function (_React$Component) {
             var _this2 = this;
 
             if (this.props.params.id) {
-                this.props.store.get(this.props.params.id, function (article) {
+                this.props.articleAjax.get(this.props.params.id, function (article) {
                     _this2.setState({ valueTitle: article.title, valueContent: article.content });
                 });
                 fetch('/articles/' + this.props.params.id, { method: 'get' }).then(function (res) {
@@ -28038,13 +28038,57 @@ var ArticleAdd = function (_React$Component) {
     }, {
         key: 'handleChangeC',
         value: function handleChangeC(e) {
-            this.setState({ valueContent: e.target.value });
+            this.setState({ valueContent: e.target.value, html: toHtml(e.target.value) });
+        }
+    }, {
+        key: 'toText',
+        value: function toText(html, cb) {
+            var reg1 = /<(p|a|h1|h2|h3|h4|h5|span|div)[^>]*>/;
+            var reg2 = /<\/(p|a|h1|h2|h3|h4|h5|span|div)>/;
+            html = html.replace(reg1, '');
+            html = html.replace(reg2, '');
+            if (reg1.test(html) || reg2.test(html)) {
+                this.toText(html, cb);
+            } else {
+                cb(html);
+            }
         }
     }, {
         key: 'handleClick',
         value: function handleClick(e) {
+            var _this3 = this;
+
             if (this.state.valueTitle && this.state.valueContent) {
-                e.target.type = 'submit';
+                var _ret = function () {
+                    var description = void 0;
+                    var title = _this3.state.valueTitle;
+                    var html = _this3.state.html;
+                    var content = _this3.state.valueContent;
+                    _this3.toText(html, function (text) {
+                        description = text.replace(/\n/, ' ');
+                        description = description.slice(0, 100);
+                    });
+                    var article = { title: title, content: content, description: description, html: html };
+
+                    //修改
+                    if (_this3.props.params.id) {
+                        console.log('add');
+                        _this3.props.articleAjax.update(_this3.props.params.id, article, function (data) {
+                            if (data.err == 0) this.props.router.push('/article/detail/' + this.props.params.id);
+                        });
+                        return {
+                            v: void 0
+                        };
+                    }
+                    //新增
+                    _this3.props.articleAjax.add(article, function (data) {
+                        if (data.err == 0) {
+                            _this3.props.router.push('/');
+                        }
+                    });
+                }();
+
+                if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
             } else {
                 alert('内容不能为空');
             }
@@ -28053,36 +28097,14 @@ var ArticleAdd = function (_React$Component) {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
-                'form',
-                { role: 'form', className: 'form col-md-9', method: 'post' },
-                _react2.default.createElement(
-                    'div',
-                    null,
-                    this.state.defaultTitle
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'form-group' },
-                    _react2.default.createElement(
-                        'label',
-                        { htmlFor: 'title', className: 'col-md-2' },
-                        '\u6807\u9898'
-                    ),
-                    _react2.default.createElement('input', { type: 'text', className: 'col-md-10', name: 'title', id: 'title', value: this.state.valueTitle, onChange: this.handleChangeT.bind(this) })
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'form-group' },
-                    _react2.default.createElement(
-                        'label',
-                        { htmlFor: 'contain', className: 'col-md-2' },
-                        '\u6B63\u6587'
-                    ),
-                    _react2.default.createElement('textarea', { cols: '30', rows: '10', className: 'col-md-10', name: 'content', id: 'contain', value: this.state.valueContent, onChange: this.handleChangeC.bind(this) })
-                ),
+                'div',
+                { className: 'clearfix', style: {} },
+                _react2.default.createElement('input', { type: 'text', className: 'col-md-12', value: this.state.valueTitle, onChange: this.handleChangeT.bind(this), placeholder: '\u8BF7\u8F93\u5165\u6807\u9898' }),
+                _react2.default.createElement('textarea', { placeholder: '\u5728\u6B64\u952E\u5165\u3002\u4F7F\u7528markdown\uFF0C\u6216html\u683C\u5F0F\u3002', className: 'col-md-6 edit-input', value: this.state.valueContent, onChange: this.handleChangeC.bind(this) }),
+                _react2.default.createElement('div', { style: { border: '1px solid gray' }, className: 'col-md-6 edit-view', dangerouslySetInnerHTML: { __html: this.state.html } }),
                 _react2.default.createElement(
                     'button',
-                    { type: 'button', onClick: this.handleClick.bind(this), formAction: this.state.formAction, className: 'btn btn-default block' },
+                    { type: 'button', onClick: this.handleClick.bind(this), className: 'btn btn-default block  col-md-2' },
                     '\u63D0\u4EA4'
                 )
             );
@@ -28151,7 +28173,7 @@ var ArticleDetail = function (_React$Component) {
             var outer = params.outer;
 
             id = outer ? id + '/' + outer : id;
-            this.props.store.get(id, function (article) {
+            this.props.articleAjax.get(id, function (article) {
                 _this2.setState({ article: article });
                 article.times = article.times ? article.times : 1;
                 if (!outer) {
@@ -28161,7 +28183,7 @@ var ArticleDetail = function (_React$Component) {
                     }).then(function (data) {
                         return data.json();
                     }).then(function (data) {
-                        console.log(data);
+                        console.log(data, 'detail');
                     });
                 }
             });
@@ -28172,7 +28194,7 @@ var ArticleDetail = function (_React$Component) {
         value: function del(id) {
             var _this3 = this;
 
-            this.props.store.del(id, function (data) {
+            this.props.articleAjax.del(id, function (data) {
                 if (data.err == 0) {
                     _this3.props.router.push('/');
                 }
@@ -28237,7 +28259,7 @@ var ArticleDetail = function (_React$Component) {
                             )
                         ) : null
                     ),
-                    _react2.default.createElement('div', { className: 'panel-body ', id: 'mk', dangerouslySetInnerHTML: renderHtml(this.state.article.content) }),
+                    _react2.default.createElement('div', { className: 'panel-body ', id: 'mk', dangerouslySetInnerHTML: renderHtml(this.state.article.html) }),
                     this.props.localUser && this.props.localUser._id == this.state.article.user || this.props.isSuper ? _react2.default.createElement(UserOption, null) : null,
                     _react2.default.createElement('div', { dangerouslySetInnerHTML: Script1 }),
                     _react2.default.createElement('div', { dangerouslySetInnerHTML: Script2 })
@@ -28253,42 +28275,7 @@ var ArticleDetail = function (_React$Component) {
 exports.default = ArticleDetail;
 
 /***/ }),
-/* 232 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var store = {
-    del: function del(id, cb) {
-        fetch('/articles/' + id, { method: 'delete' }).then(function (res) {
-            return res.json();
-        }).then(function (data) {
-            cb && cb(data);
-        });
-    },
-    get: function get(id, cb) {
-        fetch('/articles/' + id, { method: 'get' }).then(function (res) {
-            return res.json();
-        }).then(function (article) {
-            console.log(article);
-            cb && cb(article);
-        });
-    },
-    getAll: function getAll(cb) {
-        fetch('/articles', { credentials: 'include' }).then(function (res) {
-            return res.json();
-        }).then(function (articles) {
-            cb && cb(articles);
-        });
-    }
-};
-exports.default = store;
-
-/***/ }),
+/* 232 */,
 /* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28299,7 +28286,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var COMMENTS = 'COMMENTS';
-var host = "localhost";
 var commentAjax = {
     //增加一条新的留言
     add: function add(comment, cb) {
@@ -28719,7 +28705,7 @@ exports = module.exports = __webpack_require__(239)();
 
 
 // module
-exports.push([module.i, ".navbar-right img{\n    width:50px;\n    height:50px;\n}\n.media-left img{\n    width:60px;\n    height:60px;\n}\n.dropdown-toggle img{\n    width: 40px;\n    height: 40px;\n\n}\n.dropdown-toggle{\n    padding:5px!important;\n}\n\n.commentItem{\n    padding-bottom: 10px;\n    margin-bottom: 10px;\n    border-bottom: 1px dotted silver;\n}\n.commentItem:after{\n    content: '';\n    display:block;\n    clear: both;\n}\n.commentItem>div{\n    margin-bottom: 10px;\n}\n.commentContent{\n    padding-left:.5em;\n    text-indent: 1em;\n}\nli {\n    list-style:none;\n}\n\n/*\nnav a.active{\n    background:#e7e7e7 ;\n    color: red;\n}*/\n.main{\n    margin-top: 80px;\n}\n\n/*detail页面*/\n.image-package{\n    width: 100%;\n    padding-bottom: 25px;\n    box-sizing: border-box;\n}\n.image-package img{\n    max-width: 100%;\n}\n", ""]);
+exports.push([module.i, ".navbar-right img{\n    width:50px;\n    height:50px;\n}\n.media-left img{\n    width:60px;\n    height:60px;\n}\n.dropdown-toggle img{\n    width: 40px;\n    height: 40px;\n\n}\n.dropdown-toggle{\n    padding:5px!important;\n}\n\n.commentItem{\n    padding-bottom: 10px;\n    margin-bottom: 10px;\n    border-bottom: 1px dotted silver;\n}\n.commentItem:after{\n    content: '';\n    display:block;\n    clear: both;\n}\n.commentItem>div{\n    margin-bottom: 10px;\n}\n.commentContent{\n    padding-left:.5em;\n    text-indent: 1em;\n}\nli {\n    list-style:none;\n}\n\n/*\nnav a.active{\n    background:#e7e7e7 ;\n    color: red;\n}*/\n.main{\n    margin-top: 80px;\n}\n\n/*detail页面*/\n.image-package{\n    width: 100%;\n    padding-bottom: 25px;\n    box-sizing: border-box;\n}\n.image-package img{\n    max-width: 100%;\n}\n\n/*add页面*/\n.edit-view,.edit-input{\n    height: 400px;\n}\n@media (max-width: 763px) {\n    .edit-view,.edit-input{\n        height: 300px;\n    }\n}\n", ""]);
 
 // exports
 
@@ -46672,6 +46658,70 @@ var _Blog2 = _interopRequireDefault(_Blog);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _reactDom.render)(_react2.default.createElement(_Blog2.default, null), document.getElementById('app'));
+
+/***/ }),
+/* 367 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var articleAjax = {
+    del: function del(id, cb) {
+        fetch('/articles/' + id, { method: 'delete' }).then(function (res) {
+            return res.json();
+        }).then(function (data) {
+            cb && cb(data);
+        });
+    },
+    get: function get(id, cb) {
+        fetch('/articles/' + id, { method: 'get' }).then(function (res) {
+            return res.json();
+        }).then(function (article) {
+            console.log(article);
+            cb && cb(article);
+        });
+    },
+    getAll: function getAll(cb) {
+        fetch('/articles', { credentials: 'include' }).then(function (res) {
+            return res.json();
+        }).then(function (articles) {
+            cb && cb(articles);
+        });
+    },
+    add: function add(article, cb) {
+        fetch('/articles', {
+            method: 'post',
+            credentials: 'include',
+            body: JSON.stringify(article),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        }).then(function (data) {
+            cb && cb(data);
+        });
+    },
+    update: function update(id, article, cb) {
+        fetch('/articles' + id, {
+            method: 'put',
+            credentials: 'include',
+            body: JSON.stringify(article),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        }).then(function (data) {
+            cb && cb(data);
+        });
+    }
+};
+exports.default = articleAjax;
 
 /***/ })
 /******/ ]);

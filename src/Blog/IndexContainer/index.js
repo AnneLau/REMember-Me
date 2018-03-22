@@ -9,7 +9,7 @@ export default class IndexContainer extends React.Component{
     }
     componentWillMount(){
 
-        this.props.store.getAll((articles)=>{
+        this.props.articleAjax.getAll((articles)=>{
             this.setState({articles})
         })
     }

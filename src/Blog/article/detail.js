@@ -16,7 +16,7 @@ export default class ArticleDetail extends React.Component{
         let outer=params.outer
 
         id=outer?id+'/'+outer:id
-        this.props.store.get(id,(article)=>{
+        this.props.articleAjax.get(id,(article)=>{
             this.setState({article})
             article.times=article.times?article.times:1
             if(!outer){
@@ -26,7 +26,7 @@ export default class ArticleDetail extends React.Component{
                 })
                     .then((data)=>data.json())
                     .then((data)=>{
-                        console.log(data)
+                        console.log(data,'detail')
                     })
             }
         })
@@ -34,7 +34,7 @@ export default class ArticleDetail extends React.Component{
     }
 
     del(id){
-        this.props.store.del(id,(data)=>{
+        this.props.articleAjax.del(id,(data)=>{
             if(data.err==0){
                 this.props.router.push('/')
             }
@@ -73,7 +73,7 @@ export default class ArticleDetail extends React.Component{
                         </h1>
                         {this.state.article.originUrl?(<div>转自<a href={this.state.article.originUrl}>{this.state.article.originUrl}</a></div>):null}
                     </div>
-                    <div className="panel-body " id="mk" dangerouslySetInnerHTML={renderHtml(this.state.article.content)}></div>
+                    <div className="panel-body " id="mk" dangerouslySetInnerHTML={renderHtml(this.state.article.html)}></div>
                     {(this.props.localUser&&this.props.localUser._id==this.state.article.user)||this.props.isSuper?<UserOption/>:null}
                     <div dangerouslySetInnerHTML={Script1}/>
                     <div dangerouslySetInnerHTML={Script2}/>

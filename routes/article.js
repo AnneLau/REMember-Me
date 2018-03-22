@@ -21,7 +21,8 @@ router.route('/')
     .post(function (req,res) {
         var body=req.body
         body.user=req.session.user._id//article~~~~~~~~~~~~~~~~~~~~~~~~
-        body.description=body.content
+        body.date=new Date().toLocaleString()
+        console.log(body)
         Article.create(body,function (err,doc) {
             if(err){
                 req.session.err=err
@@ -29,7 +30,8 @@ router.route('/')
             }
             else{
                 req.session.success='发布成功'
-                res.redirect('/')
+                console.log('chengg')
+                res.send({err:0})
             }
         })
     })
@@ -69,9 +71,8 @@ router.route('/:_id')
             res.send(article)
         })
     })
-    .post(function (req,res) {
+    .put(function (req,res) {
         var _id=req.params._id
-        req.body.description=req.body.conent
         Article.update({_id},req.body,function (err,article) {
             if(err){
                 req.session.err=err
