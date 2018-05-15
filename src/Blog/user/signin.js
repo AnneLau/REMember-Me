@@ -25,6 +25,8 @@ export default class UserSignin extends React.Component{
                     this.props.setStateuser(data.user)
                     this.props.setSuper(data.user)
                     this.props.router.push('/')
+                }else if(data.code==1){
+                    this.props.setErr(data.err)
                 }
             })
             .catch((err)=>{

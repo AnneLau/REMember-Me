@@ -46,7 +46,14 @@ class Navs extends React.Component{
                 }
             })
     }
+    setErr(err){
+        this.setState({err})
+        setTimeout( ()=>{
+            this.setState({err:null})
+        },3000)
+    }
     render(){
+        console.log(this.state.localUser,'xxxx')
         const Login = ()=>{
             return (
                 <nav className="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -71,6 +78,7 @@ class Navs extends React.Component{
                                     <span className="caret"></span>
                                 </Link>
                                 <ul className="dropdown-menu" >
+                                    <li style={{borderBottom:'1px solid #eee',marginBottom:'5px'}}><span style={{padding:'3px 20px'}}>Hi,{this.state.localUser.username}</span></li>
                                     <li><Link  activeStyle={{background:"#e7e7e7"}} to={`/users/${this.state.localUser._id}`}>个人主页</Link></li>
                                     <li><Link   onClick={this.handleClick.bind(this)}>退出</Link></li>
                                 </ul>
@@ -120,9 +128,17 @@ class Navs extends React.Component{
             <div>
                 {this.state.localUser? <Login/>: <NoLogin/>}
                 {/*<NavsChild />*/}
-
+                {this.state.err?<div className="alert alert-danger" role="alert" style={{position:'relative',top:'50px'}}>{this.state.err}</div>:null}
                 <div className="container main">
-                    {React.cloneElement(this.props.children,{isSuper:this.state.isSuper,localUser:this.state.localUser,setStateuser:this.setStateuser.bind(this),setSuper:this.setSuper.bind(this),local,commentAjax,articleAjax})}
+                    {React.cloneElement(this.props.children,{
+                        isSuper:this.state.isSuper,
+                        localUser:this.state.localUser,
+                        setStateuser:this.setStateuser.bind(this),
+                        setSuper:this.setSuper.bind(this),
+                        setErr:this.setErr.bind(this),
+                        local,
+                        commentAjax,
+                        articleAjax})}
                     </div>
             </div>
         )

@@ -13,7 +13,7 @@ module.exports={
         //指定静态文件根目录
         stats: { colors: true },
         contentBase:'./build',
-        port:29323,
+        port:80,
         inline:true, //当源代码变化后自动重新打包并通知浏览器刷新
         hot:true
     },

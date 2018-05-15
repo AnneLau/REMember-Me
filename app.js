@@ -37,11 +37,11 @@ app.use(expressSession({
 }))
 var tmp=1
 app.use(function (req,res,next) {
-    //req.session.err=null
+    req.session.err=null
     //req.session.success=null
     //req.session.user=null
-    console.log(req.session.user,'mmmmmmmmm',tmp++)
     //res.locals.user=req.session.user
+
     next()
 })
 var user=require('./routes/user')

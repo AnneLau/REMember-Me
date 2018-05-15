@@ -5,9 +5,12 @@ export default class UserSignup extends React.Component{
     }
     handleClick(e){
         let refs=this.refs
+        console.log(refs)
         let username=refs.username.value
         let password=refs.password.value
         let email=refs.email.value
+        let avatar=refs.avatar.value
+        console.log(avatar)
         if(username&&password&&email){
            e.target.type='submit'
         }
@@ -32,7 +35,7 @@ export default class UserSignup extends React.Component{
                 </div>
                 <div className="form-group">
                     <label htmlFor="avatar" className="col-md-2 control-label">上传头像</label>
-                    <input type="file" name="avatar" className="form-control" id="avatar" />
+                    <input type="file" name="avatar" ref="avatar" className="form-control" id="avatar" />
                 </div>
                 <button type="button" onClick={this.handleClick.bind(this)}  className="form-group btn btn-success col-md-12 btn-bs">Sign up</button>
             </form>

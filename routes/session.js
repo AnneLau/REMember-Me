@@ -12,6 +12,7 @@ router.route('/')
     .post(function (req,res) {
         var body=req.body
         User.findOne(body,function (e,doc) {
+            console.log(doc)
             if(doc){
                 req.session.user = doc
                 res.send({err:0,user:doc})
@@ -19,8 +20,7 @@ router.route('/')
 
             }
             else{
-                req.session.err='用户密码错误'
-                res.send({err:'用户密码错误'})
+                res.send({code:1,err:'用户密码错误'})
             }
         })
     })

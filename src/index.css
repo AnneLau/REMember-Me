@@ -36,16 +36,25 @@ li {
     list-style:none;
 }
 
-/*
-nav a.active{
-    background:#e7e7e7 ;
-    color: red;
-}*/
 .main{
     margin-top: 80px;
 }
 
+/*首页*/
+.time{
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #bbb;
+}
+.index .article{
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eef2f8 ;
+}
 /*detail页面*/
+.detail .name{
+    margin-right: 10px;
+}
 .image-package{
     width: 100%;
     padding-bottom: 25px;

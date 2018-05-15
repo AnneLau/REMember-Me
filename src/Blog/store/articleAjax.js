@@ -7,10 +7,14 @@ var articleAjax= {
             })
     },
     get(id,cb){
-        fetch(`/articles/${id}`,{method:'get'})
+        fetch(`/articles/${id}`,{
+            credentials: 'include',
+            headers: {
+                 'Content-Type': 'application/json'
+             }
+        })
             .then((res)=>res.json())
             .then((article)=>{
-                console.log(article)
                 cb&&cb(article)
             })
     },
@@ -18,6 +22,7 @@ var articleAjax= {
         fetch('/articles',{credentials: 'include'})
             .then((res)=>res.json())
             .then((articles)=>{
+            console.log(articles[0])
                 cb&&cb(articles)
             })
     },

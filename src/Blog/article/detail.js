@@ -4,7 +4,7 @@ import CommentBox from '../CommentBox';
 export default class ArticleDetail extends React.Component{
     constructor(props){
         super(props)
-        this.state={article:{},localUser:null,err:null,success:null}
+        this.state={article:{user:{}},localUser:null,err:null,success:null}
     }
     componentWillMount(){
         /*$.get(`/articles/${this.props.params.id}`).then((article)=>{/////////////////////////路径
@@ -64,13 +64,19 @@ export default class ArticleDetail extends React.Component{
                 <a onClick={()=>{this.del(this.state.article._id)}} className="btn btn-danger">删除</a>
             </div>
         )
+        console.log(this.state.article)
         return(
-            <div className="col-md-7 col-md-offset-3">
+            <div className="col-md-7 col-md-offset-3 detail">
                 <div className="panel panel-default" style={{border:'none',background:'white'}}>
                     <div className="panel-heading" style={{background:'white'}}>
                         <h1>
                             {this.state.article.title}
                         </h1>
+                        <div className=" ">
+                            <span className="time">{this.state.article.createAt}</span>
+                            <span className="badge pull-right">{this.state.article.times}</span>
+                            <Link  className="name pull-right">作者：{this.state.article.user.username}</Link>
+                        </div>
                         {this.state.article.originUrl?(<div>转自<a href={this.state.article.originUrl}>{this.state.article.originUrl}</a></div>):null}
                     </div>
                     <div className="panel-body " id="mk" dangerouslySetInnerHTML={renderHtml(this.state.article.html)}></div>

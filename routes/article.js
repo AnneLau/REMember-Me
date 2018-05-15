@@ -21,7 +21,7 @@ router.route('/')
     .post(function (req,res) {
         var body=req.body
         body.user=req.session.user._id//article~~~~~~~~~~~~~~~~~~~~~~~~
-        body.date=new Date().toLocaleString()
+        body.createAt=new Date().toLocaleString()
         console.log(body)
         Article.create(body,function (err,doc) {
             if(err){
@@ -66,8 +66,7 @@ router.route('/:_id')
     })
     .get(function (req,res) {
         var _id=req.params._id
-        Article.findById(_id,function(err,article){
-            //res.render('article/detail',{title:'文章详情',article});
+        Article.findById(_id).populate('user').exec(function(err,article){
             res.send(article)
         })
     })
@@ -100,6 +99,18 @@ router.route('/:_id')
         }
     })
 })
+
+/*var user1,user2
+Article.findById('58ce34b8e098bf150c89dc17',function(err,article){
+    //res.render('article/detail',{title:'文章详情',article});
+    console.log(typeof article.title,1111111111)
+    user1=article.user
+    Article.find({},function (err,articles) {
+        user2=articles[0].user
+        console.dir(user1)
+        console.dir(user2)
+    })
+})*/
 
 
 module.exports = router;

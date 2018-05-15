@@ -10,8 +10,13 @@ var getArticle=function (id,cb) {
         body=conv.decode(body,'utf-8')
         let $=cheerio.load(body)
         let title=$('.note .post .article .title').text()
-        let content=$('.note .post .article .show-content').html()
-        let article={title,content,originUrl:url}
+        let html=$('.note .post .article .show-content').html()
+        //由&#x5730;&#x5411;&#x524D;&#x51B2;转为汉子
+        let $info=$('.note .post .article .info')
+        let username=$info.find('.name a').text()
+        let createAt=$info.find('.publish-time').text()
+        console.log(html)
+        let article={title,html,originUrl:url,user:{username},createAt}
         cb&&cb(article)
     })
 }
